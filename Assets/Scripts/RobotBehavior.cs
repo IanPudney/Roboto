@@ -13,7 +13,9 @@ public class ForwardCommand : RobotActionCommand {
 }
 
 public class RobotBehavior : MonoBehaviour {
+	public TeamUtil.Team team = TeamUtil.Team.Red;
 	Rigidbody rigid;
+	Renderer render;
 	List<RobotActionCommand> commands = new List<RobotActionCommand>();
 	int current_command;
 	public static float force_const = 50f;
@@ -21,9 +23,13 @@ public class RobotBehavior : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		rigid = gameObject.GetComponent<Rigidbody>();
+		render = gameObject.GetComponent<Renderer>();
+
 		current_command = 0;
 		commands.Add(new ForwardCommand());
-		rigid = gameObject.GetComponent<Rigidbody>();
+
+		render.material.color = TeamUtil.GetColorByTeam(team);
 	}
 	
 	// Update is called once per frame
