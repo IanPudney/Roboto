@@ -11,7 +11,11 @@ public class MainThread : MonoBehaviour
     static Queue<Func> functions = new Queue<Func>();
     static Queue<Semaphore> sems = new Queue<Semaphore>();
     Mutex mutex = new Mutex();
-
+    Thread mainThread;
+    public bool onMainThread
+    {
+        get { return mainThread == System.Threading.Thread.CurrentThread; }
+    }
     public static MainThread main
     {
         get; private set;
@@ -19,34 +23,56 @@ public class MainThread : MonoBehaviour
 
     public void Awake()
     {
+        mainThread = System.Threading.Thread.CurrentThread;
         main = this;
     }
 
     public Semaphore runCoroutine(IEnumerator numerator)
     {
-        mutex.WaitOne();
-        Func f = (new CoroutineBinder(this, numerator)).execute;
-        functions.Enqueue(f);
-        Semaphore s = new Semaphore(0, 1);
-        sems.Enqueue(s);
-        mutex.ReleaseMutex();
-        return s;
-        // don't wait on the semaphore, because this starts it async
+        if (onMainThread)
+        {
+            StartCoroutine(numerator);
+            return null; // it's invalid to wait for a coroutine to finish on the main thread, since that coroutine must itself run on the main thread.
+        } else
+        {
+            mutex.WaitOne();
+            Func f = (new CoroutineBinder(this, numerator)).execute;
+            functions.Enqueue(f);
+            Semaphore s = new Semaphore(0, 1);
+            sems.Enqueue(s);
+            mutex.ReleaseMutex();
+            return s;
+        }
     }
 
     public void waitCoroutine(IEnumerator numerator)
     {
+        if(onMainThread)
+        {
+            throw new UnityException("It is invalid to wait on a coroutine in the main thread, because the coroutine must run in the main thread.");
+        }
         runCoroutine(numerator).WaitOne();
     }
-
-    public void Run(Func f)
+    public Semaphore Run(Func f)
     {
-        mutex.WaitOne();
-        functions.Enqueue(f);
-        Semaphore s = new Semaphore(0, 1);
-        sems.Enqueue(s);
-        mutex.ReleaseMutex();
-        s.WaitOne();
+        if(onMainThread)
+        {
+            f();
+            return new Semaphore(1, 1);
+        } else
+        {
+            mutex.WaitOne();
+            functions.Enqueue(f);
+            Semaphore s = new Semaphore(0, 1);
+            sems.Enqueue(s);
+            mutex.ReleaseMutex();
+            return s;
+        }
+    }
+
+    public void Wait(Func f)
+    {
+        Run(f).WaitOne();
     }
 
     void Update()

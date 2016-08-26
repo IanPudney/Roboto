@@ -2,7 +2,14 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Threading;
-
+using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+using IronPython.Hosting;
+using IronPython.Modules;
+using System.Collections.Generic;
+using Microsoft.Scripting.Hosting;
 public class RobotEditor : MonoBehaviour {
     public Text input;
     public Robot robot;
@@ -29,6 +36,7 @@ public class RobotEditor : MonoBehaviour {
         try
         {
             PyHelper.ImportAllRoot(python);
+            //object threadWrapper = python.ConstructPyClass("ThreadWrapper", "ThreadWrapper", robot);
             python.Compile("from UnityEngine import *");
             python.Scope.SetVariable("robot", robot);
             //CompileBinder toCall = new CompileBinder(python, "robot = GameObject.Find('Robot').GetComponent[Robot]()\n", Microsoft.Scripting.SourceCodeKind.SingleStatement);
@@ -48,6 +56,9 @@ public class RobotEditor : MonoBehaviour {
             if(results.Length > 0)
             {
                 Debug.Log(results);
+            } else
+            {
+                Debug.Log("<Empty python response>");
             }
         }
 

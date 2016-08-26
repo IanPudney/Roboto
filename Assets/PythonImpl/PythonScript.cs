@@ -8,9 +8,7 @@ public class PythonScript : EventBehaviour {
     public ConfigurableValue[] keyValues;
     public override void Awake()
     {
-        pyInstance = python.ConstructPyClass(pythonClass, pythonClass, new object[]{ this, keyValues});
-        
-        
+        pyInstance = python.ConstructPyClass(pythonClass, pythonClass, new object[]{ this, keyValues});        
         base.Awake();
         CallPyMethod("Awake");
     }
