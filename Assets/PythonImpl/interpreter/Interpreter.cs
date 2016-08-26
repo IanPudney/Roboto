@@ -106,6 +106,7 @@ public class Interpreter
         Compiled.Execute(Scope);
         interpreterStack.Pop();
     }
+
     public string GetOutput()
     {
         string output = FormatOutput(ReadFromStream(stream));

@@ -5,6 +5,7 @@ using System.Threading;
 
 public class RobotEditor : MonoBehaviour {
     public Text input;
+    public Robot robot;
 
     // Use this for initialization
     void Start () {
@@ -27,11 +28,13 @@ public class RobotEditor : MonoBehaviour {
         string results = "";
         try
         {
-            python.Compile("from UnityEngine import *");
             PyHelper.ImportAllRoot(python);
-            CompileBinder toCall = new CompileBinder(python, "robot = GameObject.Find('Robot').GetComponent[Robot]()\n", Microsoft.Scripting.SourceCodeKind.SingleStatement);
-            MainThread.Func func = toCall.execute;
-            MainThread.main.Run(func);
+            python.Compile("from UnityEngine import *");
+            python.Scope.SetVariable("robot", robot);
+            //CompileBinder toCall = new CompileBinder(python, "robot = GameObject.Find('Robot').GetComponent[Robot]()\n", Microsoft.Scripting.SourceCodeKind.SingleStatement);
+            //MainThread.Func func = toCall.execute;
+            //MainThread.main.Run(func);
+
             python.Compile(cmd, Microsoft.Scripting.SourceCodeKind.Statements);
         }
         catch (System.Exception ex)
@@ -42,7 +45,10 @@ public class RobotEditor : MonoBehaviour {
         finally
         {
             results += python.GetOutput();
-            Debug.Log(results);
+            if(results.Length > 0)
+            {
+                Debug.Log(results);
+            }
         }
 
     }
