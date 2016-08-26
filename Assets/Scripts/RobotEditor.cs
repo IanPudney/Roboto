@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using Microsoft.Scripting.Hosting;
 public class RobotEditor : MonoBehaviour {
     public Text input;
-    public Robot robot;
+    public UnityEngine.Object robot;
 
     // Use this for initialization
     void Start () {
