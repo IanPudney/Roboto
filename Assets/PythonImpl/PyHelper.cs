@@ -17,12 +17,17 @@ static public class PyHelper  {
     //import all Unity scripts in the root namespace. 
     public static void ImportAllRoot()
     {
+        ImportAllRoot(Interpreter.Current);
+    }
+    public static void ImportAllRoot(Interpreter python)
+    {
         foreach(System.Type typ in Assembly.GetExecutingAssembly().GetTypes())
         {
             if(typ.Namespace == null)
             {
+                if (typ.Name.Contains("<")) continue; // ignore dynamically generated
                 string importline = "try:\n import " + typ.Name+ ";\nexcept:\n pass;";
-                Interpreter.Current.Compile(importline, Microsoft.Scripting.SourceCodeKind.Statements);
+                python.Compile(importline, Microsoft.Scripting.SourceCodeKind.Statements);
             }
         }
     }

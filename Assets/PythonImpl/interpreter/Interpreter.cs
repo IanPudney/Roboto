@@ -106,6 +106,7 @@ public class Interpreter
         Compiled.Execute(Scope);
         interpreterStack.Pop();
     }
+
     public string GetOutput()
     {
         string output = FormatOutput(ReadFromStream(stream));
@@ -218,12 +219,8 @@ public class Interpreter
 
     public ScriptScope LoadPyModule(string module)
     {
-        //Compile("import " + module);
         Scope.ImportModule(module);
         ScriptScope PyDll = Scope.GetVariable<ScriptScope>(module);
-        //object Class = PyDll.GetVariable("PythonClass");
-        //object MyClass = Engine.Operations.Invoke(Class);
-        //Engine.Operations.InvokeMember(MyClass, "test", new object[0]);
         return PyDll;
     }
     public object ConstructPyClass(string module, string classname, params object[] initargs) {
