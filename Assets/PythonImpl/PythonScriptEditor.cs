@@ -40,7 +40,7 @@ public class PythonScriptEditor : Editor
         {
             myTarget.name = EditorGUILayout.TextField("Name", myTarget.name);
         }
-        catch (System.ArgumentException ex)
+        catch (System.ArgumentException)
         {
             return;
         }

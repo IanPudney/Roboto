@@ -131,7 +131,7 @@ public class Interpreter
         object clr = Scope.GetVariable("clr");
         List<string> args = new List<string>(filenames);
         args.Insert(0, assemblyName + ".dll");
-        object ret = Engine.Runtime.Operations.InvokeMember(clr, "CompileModules", args.ToArray());
+        Engine.Runtime.Operations.InvokeMember(clr, "CompileModules", args.ToArray());
 
     }
     
