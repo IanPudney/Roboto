@@ -12,11 +12,19 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using InControl;
+using IronPython.Runtime;
 
 public class ControllerInputManager : MonoBehaviour
 {
 	// Object references.
 	private InputDevice device;
+
+	// TODO(ddrocco): Delete this and handle creation more elegantly.
+	public GameObject input_handler_prefab;
+
+	// Current ControllerInputHandler.
+	private ControllerInputHandler handler;
+	private List<ControllerInputHandler> old_handlers = new List<ControllerInputHandler>();
 
 	// Whether to use the mouse for controls.
 	private bool debugControls = false;
@@ -24,14 +32,14 @@ public class ControllerInputManager : MonoBehaviour
 	public float lfeed;
 	public float rfeed;
 	public bool afeed;
-	public bool Sfeed;
+	public bool sfeed;
 
 	void Awake()
 	{
 		lfeed = 0f;
 		rfeed = 0f;
 		afeed = false;
-		Sfeed = false;
+		sfeed = false;
 
 		device = InputManager.ActiveDevice;
 
@@ -49,6 +57,8 @@ public class ControllerInputManager : MonoBehaviour
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
 		}
+
+		handler = this.NewHandler();
 	}
 
 	void Update()
@@ -62,7 +72,7 @@ public class ControllerInputManager : MonoBehaviour
 		rfeed = device.RightStickY;
 
 		// Change states based on controller input
-		if (device.Action3.WasPressed) // X button on Xbox
+		if (device.Action3.IsPressed) // X button on Xbox
 		{
 			afeed = true;
 		} else {
@@ -70,12 +80,24 @@ public class ControllerInputManager : MonoBehaviour
 		}
 
 		// Change states based on controller input
-		if (device.Action1.WasPressed) // A? button on Xbox
+		if (device.Action1.IsPressed) // A? button on Xbox
 		{
-			Sfeed = true;
+			sfeed = true;
 		} else {
-			Sfeed = false;
+			sfeed = false;
 		}
+	}
+
+	// Called by MasterTimer on the first step during FixedUpdate action.
+	public void _TimerStartOfStream() {
+		handler.StartOfStream();
+	}
+
+	// Called by MasterTimer on the last step during FixedUpdate action.
+	public void _TimerEndOfStream(int step) {
+		handler.EndOfStream(step);
+		old_handlers.Add(handler);
+		handler = this.NewHandler();
 	}
 
 	void CheckDebugStates()
@@ -87,5 +109,12 @@ public class ControllerInputManager : MonoBehaviour
 	void SetMoveDirection()
 	{
 
+	}
+
+	ControllerInputHandler NewHandler() {
+		GameObject new_handler_object = Instantiate(input_handler_prefab) as GameObject;
+		ControllerInputHandler new_handler = new_handler_object.GetComponent<ControllerInputHandler>();
+		new_handler.SetControllerInputManager(this);
+		return new_handler;
 	}
 }

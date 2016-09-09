@@ -1,90 +1,52 @@
 ﻿using UnityEngine;
 using System.Collections;
+using XInputDotNetPure;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using XInputDotNetPure;
 
-public class ControllerInputVisualizer : MonoBehaviour {
-
-	ControllerInputManager input;
-	Queue<float> lstream;
-	Queue<float> rstream;
-	Queue<bool> astream;
-	int steps;
-	int total_steps;
+public class ControllerInputVisualizer : ControllerInputHandler {
 
 	public GameObject visualizer_prefab;
 
-	Transform LVisualizer;
-	Transform RVisualizer;
+	Transform LVisualizerTransform;
+	Transform RVisualizerTransform;
+	Material LVisualizerMaterial;
+	Material RVisualizerMaterial;
 	Renderer AVisualizer;
 
-	bool state;
+	int x_displacement {
+		get {
+			return id;
+		}
+	}
+
 
 	// Use this for initialization
-	void Start () {
-		input = GetComponent<ControllerInputManager>();
+	new protected void Start () {
 		GameObject LObject = Instantiate(visualizer_prefab) as GameObject;
-		LVisualizer = LObject.transform;
+		LVisualizerTransform = LObject.transform;
+		LVisualizerTransform.SetParent(transform);
+		LVisualizerMaterial = LObject.GetComponent<Renderer>().material;
 		GameObject RObject = Instantiate(visualizer_prefab) as GameObject;
-		RVisualizer = RObject.transform;
+		RVisualizerTransform = RObject.transform;
+		RVisualizerTransform.SetParent(transform);
+		RVisualizerMaterial = RObject.GetComponent<Renderer>().material;
 		GameObject AObject = Instantiate(visualizer_prefab) as GameObject;
 		AVisualizer = AObject.GetComponent<Renderer>();
-
-		InitializePrimitives();
-
-		lstream = new Queue<float>();
-		rstream = new Queue<float>();
-		astream = new Queue<bool>();
+		base.Start();
 	}
 
-	void Update() {
-		if (state && input.Sfeed) {
-			state = false;
-			total_steps = steps ;
-			steps = 0;
-		}
+	override protected void LAct(float y) {
+		LVisualizerTransform.transform.localPosition = new Vector3(-1 - x_displacement, y, 0);
+		LVisualizerMaterial.color = new Color(x_displacement + 0.5f + y/2f, 0.5f, 0.5f + y/4f);
 	}
 
-	// Update is called once per frame
-	void FixedUpdate () {
-		steps += 1;
-		MasterTicker.main.ticks = steps;
-
-		if (!state) {
-			if (steps < total_steps) {
-				LAct(lstream.Dequeue());
-				RAct(rstream.Dequeue());
-				AAct(astream.Dequeue());
-				return;
-			} else {
-				Debug.Log(total_steps + " taken; resetting...");
-				InitializePrimitives();
-			}
-		}
-
-		LAct(input.lfeed);
-		RAct(input.rfeed);
-		AAct(input.afeed);
-		lstream.Enqueue(input.lfeed);
-		rstream.Enqueue(input.rfeed);
-		astream.Enqueue(input.afeed);
+	override protected void RAct(float y) {
+		RVisualizerTransform.transform.localPosition = new Vector3(1 + x_displacement, y, 0);
+		RVisualizerMaterial.color = new Color(0.5f - y/4f, 0.5f - y/2f, 0.5f);
 	}
 
-	void LAct(float y) {
-		LVisualizer.transform.localPosition = new Vector3(-1, y, 0);
-	}
-
-	void RAct(float y) {
-		RVisualizer.transform.localPosition = new Vector3(1, y, 0);
-	}
-
-	void AAct(bool y) {
+	override protected void AAct(bool y) {
 		AVisualizer.enabled = y;
-	}
-
-	void InitializePrimitives() {
-		state = true;
-		steps = 0;
 	}
 }

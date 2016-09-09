@@ -261,6 +261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d32d64a55f0997f4ab4377d2adaf3703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  input: {fileID: 858389277}
 --- !u!1 &809356940
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,7 +332,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 858389278}
   - 114: {fileID: 858389277}
-  - 114: {fileID: 858389279}
   m_Layer: 0
   m_Name: ControllerTracker
   m_TagString: Untagged
@@ -350,10 +350,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c80d0a21fbd6f3449a84f557b1aca5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  input_handler_prefab: {fileID: 196420, guid: 26564d8b7b60af34ca14130529a8b7ff, type: 2}
   lfeed: 0
   rfeed: 0
   afeed: 0
-  Sfeed: 0
+  sfeed: 0
 --- !u!4 &858389278
 Transform:
   m_ObjectHideFlags: 0
@@ -366,18 +367,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
---- !u!114 &858389279
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 858389276}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2b7523cb163e8d4fa322fd77ce5b58b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visualizer_prefab: {fileID: 137232, guid: cc2bea24231a05d4abfbcb48d0d5bf04, type: 2}
 --- !u!1 &886884258
 GameObject:
   m_ObjectHideFlags: 0
