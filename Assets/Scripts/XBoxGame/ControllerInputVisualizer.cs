@@ -49,4 +49,12 @@ public class ControllerInputVisualizer : ControllerInputHandler {
 	override protected void AAct(bool y) {
 		AVisualizer.enabled = y;
 	}
+
+	override protected void ResolveActions() {
+		return;
+	}
+
+	override public void CleanupPositions() {
+		return;
+	}
 }

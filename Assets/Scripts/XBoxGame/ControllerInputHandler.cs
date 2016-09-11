@@ -66,6 +66,7 @@ public class ControllerInputHandler : MonoBehaviour {
 					LAct(lhistory[step]);
 					RAct(rhistory[step]);
 					AAct(ahistory[step]);
+					ResolveActions();
 				} else {
 					Pause();
 				}
@@ -74,6 +75,7 @@ public class ControllerInputHandler : MonoBehaviour {
 				LAct(input.lfeed);
 				RAct(input.rfeed);
 				AAct(input.afeed);
+				ResolveActions();
 				lstream.Enqueue(input.lfeed);
 				rstream.Enqueue(input.rfeed);
 				astream.Enqueue(input.afeed);
@@ -106,6 +108,7 @@ public class ControllerInputHandler : MonoBehaviour {
 		rhistory = rstream.ToArray();
 		ahistory = astream.ToArray();
 		total_steps = step ;
+		CleanupPositions();
 		Pause();
 	}
 
@@ -118,6 +121,14 @@ public class ControllerInputHandler : MonoBehaviour {
 	}
 
 	virtual protected void AAct(bool y) {
+		throw new NotImplementedException();
+	}
+
+	virtual protected void ResolveActions() {
+		throw new NotImplementedException();
+	}
+
+	virtual public void CleanupPositions() {
 		throw new NotImplementedException();
 	}
 }

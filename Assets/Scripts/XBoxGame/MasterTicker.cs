@@ -6,6 +6,8 @@ using System.IO;
 using IronPython.Runtime;
 
 public class MasterTicker : MonoBehaviour {
+	int MAX_TICKS = 1000;
+
 	public static MasterTicker main;
 	Text text;
 
@@ -43,7 +45,7 @@ public class MasterTicker : MonoBehaviour {
 
 		state = State.waiting;
 		ticks = 0;
-		max_ticks = 300;
+		max_ticks = MAX_TICKS;
 	}
 
 	void FixedUpdate() {
@@ -53,6 +55,10 @@ public class MasterTicker : MonoBehaviour {
 				input._TimerStartOfStream();
 				foreach (ControllerInputHandler handler in handlers) {
 					handler.Playback();
+				}
+			} else { 
+				foreach (ControllerInputHandler handler in handlers) {
+					handler.CleanupPositions();
 				}
 			}
 		} else {

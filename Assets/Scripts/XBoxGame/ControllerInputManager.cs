@@ -20,7 +20,12 @@ public class ControllerInputManager : MonoBehaviour
 	private InputDevice device;
 
 	// TODO(ddrocco): Delete this and handle creation more elegantly.
-	public GameObject input_handler_prefab;
+	public GameObject ih_visualizer_prefab;
+	public GameObject ih_tankbot_prefab;
+	enum IHType {
+		visualizer,
+		tankbot,
+	}
 
 	// Current ControllerInputHandler.
 	private ControllerInputHandler handler;
@@ -58,7 +63,7 @@ public class ControllerInputManager : MonoBehaviour
 			Cursor.visible = false;
 		}
 
-		handler = this.NewHandler();
+		handler = this.NewHandler(Vector3.zero);
 	}
 
 	void Update()
@@ -97,7 +102,8 @@ public class ControllerInputManager : MonoBehaviour
 	public void _TimerEndOfStream(int step) {
 		handler.EndOfStream(step);
 		old_handlers.Add(handler);
-		handler = this.NewHandler();
+		// TODO(ddrocco): Make this controllable and dynamic.
+		handler = this.NewHandler(new Vector3(2 * old_handlers.Count, 0, 0));
 	}
 
 	void CheckDebugStates()
@@ -111,8 +117,19 @@ public class ControllerInputManager : MonoBehaviour
 
 	}
 
-	ControllerInputHandler NewHandler() {
-		GameObject new_handler_object = Instantiate(input_handler_prefab) as GameObject;
+	ControllerInputHandler NewHandler(Vector3 position, IHType ih_type = IHType.tankbot) {
+		GameObject new_handler_object = null;
+		switch (ih_type) {
+		case IHType.visualizer:
+			new_handler_object = Instantiate(ih_visualizer_prefab) as GameObject;
+			Debug.Log("Intantiating Visualizer");
+			break;
+		case IHType.tankbot:
+			new_handler_object = Instantiate(ih_tankbot_prefab) as GameObject;
+			Debug.Log("Intantiating Tankbot");
+			break;
+		}
+		new_handler_object.transform.position = position;
 		ControllerInputHandler new_handler = new_handler_object.GetComponent<ControllerInputHandler>();
 		new_handler.SetControllerInputManager(this);
 		return new_handler;
