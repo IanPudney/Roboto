@@ -77,7 +77,7 @@ public class ControllerInputTankbot : ControllerInputHandler {
 		if (!cannon_loaded) {
 			--cannon_load_cooldown;
 		}
-		Debug.Log(robo_state);
+		// Debug.Log(robo_state);
 		switch (robo_state){
 		case Robo_state.driving:
 			if (fire_action_taken && cannon_loaded) {
