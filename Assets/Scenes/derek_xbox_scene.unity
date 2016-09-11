@@ -85,6 +85,60 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &38107606
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 466860, guid: 9c3f3aad8d2335441ba511fa14fc2d72, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 3.7871299
+      objectReference: {fileID: 0}
+    - target: {fileID: 466860, guid: 9c3f3aad8d2335441ba511fa14fc2d72, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 2.1525156
+      objectReference: {fileID: 0}
+    - target: {fileID: 466860, guid: 9c3f3aad8d2335441ba511fa14fc2d72, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 466860, guid: 9c3f3aad8d2335441ba511fa14fc2d72, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 466860, guid: 9c3f3aad8d2335441ba511fa14fc2d72, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 466860, guid: 9c3f3aad8d2335441ba511fa14fc2d72, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 466860, guid: 9c3f3aad8d2335441ba511fa14fc2d72, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071067
+      objectReference: {fileID: 0}
+    - target: {fileID: 466860, guid: 9c3f3aad8d2335441ba511fa14fc2d72, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 474954, guid: 9c3f3aad8d2335441ba511fa14fc2d72, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474954, guid: 9c3f3aad8d2335441ba511fa14fc2d72, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 474954, guid: 9c3f3aad8d2335441ba511fa14fc2d72, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 9c3f3aad8d2335441ba511fa14fc2d72, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &500641793
 GameObject:
   m_ObjectHideFlags: 0

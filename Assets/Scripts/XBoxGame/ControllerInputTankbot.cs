@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class ControllerInputTankbot : ControllerInputHandler {
+	int FIRE_ANIMATION_LENGTH = 25;
 
 	public GameObject tankbot_body_prefab;
 	public GameObject tankbot_bullet_prefab;
 
 	Rigidbody TankbotRigidbody;
+	ParticleSystem TankbotParticleSystem;
 	int tankbot_health;
 
 	float left_tread;
@@ -37,7 +39,7 @@ public class ControllerInputTankbot : ControllerInputHandler {
 		}
 		set {
 			if (value) {
-				_fire_animation_remaining = 20;
+				_fire_animation_remaining = FIRE_ANIMATION_LENGTH;
 			} else {
 				_fire_animation_remaining = 0;
 			}
@@ -56,6 +58,8 @@ public class ControllerInputTankbot : ControllerInputHandler {
 		GameObject TankbotBody = Instantiate(tankbot_body_prefab) as GameObject;
 		TankbotRigidbody = TankbotBody.GetComponent<Rigidbody>();
 		TankbotRigidbody.transform.SetParent(transform);
+		TankbotParticleSystem = TankbotBody.GetComponentInChildren<ParticleSystem>();
+		TankbotParticleSystem.startLifetime = FIRE_ANIMATION_LENGTH * Time.fixedDeltaTime;
 		CleanupPositions();
 		base.Start();
 	}
@@ -81,7 +85,7 @@ public class ControllerInputTankbot : ControllerInputHandler {
 		switch (robo_state){
 		case Robo_state.driving:
 			if (fire_action_taken && cannon_loaded) {
-				FireCannon();
+				PrefireCannon();
 				return;
 			}
 			// Debug.Log("Tankbot" + id + ": (" + left_tread + "," + right_tread + ")");
@@ -93,7 +97,7 @@ public class ControllerInputTankbot : ControllerInputHandler {
 				--_fire_animation_remaining;
 				return;
 			} else {
-				robo_state = Robo_state.driving;
+				FireCannon();
 			}
 			break;
 		case Robo_state.dead:
@@ -113,9 +117,18 @@ public class ControllerInputTankbot : ControllerInputHandler {
 
 	// Private, unique
 
-	void FireCannon() {
+	void PrefireCannon() {
 		robo_state = Robo_state.firing;
 		cannon_loaded = false;
 		fire_animation_playing = true;
+		TankbotParticleSystem.Emit(1);
+	}
+
+	void FireCannon() {
+		robo_state = Robo_state.driving;
+		Instantiate(
+				tankbot_bullet_prefab,
+				TankbotRigidbody.transform.position + 1f * TankbotRigidbody.transform.forward,
+				TankbotRigidbody.transform.localRotation * Quaternion.Euler(new Vector3(-90f, 0, 0)));
 	}
 }
